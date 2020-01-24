@@ -1,0 +1,11 @@
+---
+
+- import_playbook: ansible-version.yml
+
+- name: "Deploy an mumble server"
+  hosts: "{{ target if target is defined else 'mumble' }}"
+  become: true
+
+  roles:
+    - docker
+    - mumble

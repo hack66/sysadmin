@@ -1,0 +1,17 @@
+---
+
+- name: Create local mumble directory
+  file:
+    path: "{{ mumble_path }}"
+    state: directory
+
+- name: Run mumble container
+  docker_container:
+    name: "{{ mumble_ct_name }}"
+    restart_policy: "{{ mumble_restart_policy }}"
+    image: "{{ mumble_ct_img }}"
+    published_ports:
+      - "64738:64738"
+      - "64738:64738/udp"
+    volumes:
+      - "{{ mumble_path }}:{{ mumble_ct_vol }}"

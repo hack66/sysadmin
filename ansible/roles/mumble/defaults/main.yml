@@ -1,0 +1,11 @@
+# Docker restart policy
+mumble_restart_policy: unless-stopped
+
+# Local mumble PATH
+mumble_path: /data/mumble
+
+# mumble container
+mumble_ct_name: mumble
+# https://hub.docker.com/r/mattikus/murmur/tags
+mumble_ct_img: mattikus/murmur:v1.3.0
+mumble_ct_vol: /data

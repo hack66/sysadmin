@@ -1,0 +1,56 @@
+---
+
+# https://docs.docker.com/install/linux/docker-ce/debian/
+- name: Ensures old versions of Docker are not installed
+  apt:
+    cache_valid_time: 80000
+    pkg: ['docker', 'docker-engine', 'docker.io']
+    state: absent
+    autoremove: yes
+    purge: yes
+
+- name: Installs packages for Docker and docker-compose
+  apt:
+    pkg: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg2', 'software-properties-common', 'python-pip']
+    state: present
+  when:
+    - ansible_facts['distribution'] == 'Debian'
+    - ansible_facts['distribution_major_version'] < '10'
+
+- name: Installs packages for Docker and docker-compose (>= Debian 10)
+  apt:
+    pkg: ['apt-transport-https', 'ca-certificates', 'curl', 'gnupg2', 'software-properties-common']
+    state: present
+  when:
+    - ansible_facts['distribution'] == 'Debian'
+    - ansible_facts['distribution_major_version'] >= '10'
+
+- name: Adds Docker apt Debian key
+  apt_key:
+    url: https://download.docker.com/linux/debian/gpg
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+
+- name: Adds Docker Debian repository
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/debian {{ ansible_distribution_release }} stable"
+    state: present
+    update_cache: yes
+
+- name: Installs Docker (>= Debian 10)
+  apt:
+    pkg: [ 'docker-ce', 'python-docker']
+    state: present
+
+- name: Ensures docker-compose is installed (via pip) (< Debian 10)
+  pip:
+    name: docker-compose
+    state: present
+  when:
+    - ansible_facts['distribution'] == 'Debian'
+    - ansible_facts['distribution_major_version'] < '10'
+
+- name: Installs Docker (< Debian 10)
+  apt:
+    pkg: docker-ce
+    state: present
