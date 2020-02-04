@@ -1,0 +1,40 @@
+{{ dokuwiki_host }} www.{{ dokuwiki_host }} {
+    root {{ dokuwiki_docker_root }}
+    log / stdout {
+        {{ caddy_log_ipmask }}
+    }
+    gzip
+    tls {{ le_email }}
+
+    #fastcgi / /var/run/php-fpm/php-fpm.sock php {
+    fastcgi / 127.0.0.1:9000 php {
+      index doku.php
+    }
+
+    on startup php-fpm7
+
+    internal /forbidden
+
+    rewrite {
+      r /(data/|conf/|bin/|inc/|install.php)
+      to /forbidden
+    }
+    rewrite /_media {
+      r (.*)
+      to /lib/exe/fetch.php?media={1}
+    }
+    rewrite /_detail {
+      r (.*)
+      to /lib/exe/detail.php?media={1}
+    }
+    rewrite /_export {
+      r /([^/]+)/(.*)
+      to /doku.php?do=export_{1}&id={2}
+    }
+    rewrite {
+      if {path} not_match /lib/.*
+      if {path} not_match /forbidden
+      r /(.*)
+      to {uri} /doku.php?id={1}&{query}
+    }
+}

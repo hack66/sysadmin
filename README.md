@@ -6,6 +6,15 @@
 
 `cd ansible && ansible-playbook deploy-mumble.yml`
 
+### DokuWiki
+
+`cd ansible && ansible-playbook deploy-dokuwiki.yml`
+
+#### Dokuwiki restore
+
+- https://www.dokuwiki.org/faq:servermove
+- https://www.dokuwiki.org/install:upgrade
+
 ## Adding SSH fingerprints to known hosts
 
 1. Get an SSH fingerprint from a local `known_hosts` file for a given hostname
