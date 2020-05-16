@@ -1,0 +1,61 @@
+---
+
+- name: Bring up Docker containers of "{{ etherpad_host }}"
+  docker_compose:
+    project_name: "{{ etherpad_host }}"
+    definition:
+      version: '3'
+      services:
+        etherpad_db:
+          restart: unless-stopped
+          image: "{{ db_ct_img }}"
+          container_name: "{{ etherpad_db_ct_name }}"
+          volumes:
+            - "{{ etherpad_db_ct_path }}:/var/lib/mysql"
+          environment:
+            MYSQL_ROOT_PASSWORD: "{{ db_root_password }}"
+            MYSQL_DATABASE: "{{ db_database }}"
+            MYSQL_USER: "{{ db_user }}"
+            MYSQL_PASSWORD: "{{ db_password }}"
+          command: "{{ etherpad_db_ct_cmd }}"
+        etherpad:
+          restart: unless-stopped
+          container_name: "{{ etherpad_ct_name }}"
+          image: "{{ etherpad_ct_img }}"
+          environment:
+            DB_TYPE: "{{ etherpad_db_ct_type }}"
+            DB_HOST: "{{ etherpad_db_ct_name }}"
+            DB_port: "{{ etherpad_db_ct_port }}"
+            DB_NAME: "{{ db_database }}"
+            DB_USER: "{{ db_user }}"
+            DB_PASS: "{{ db_password }}"
+            DB_CHARSET: "{{ etherpad_db_ct_charset }}"
+            TITLE: "{{ etherpad_title | string }}"
+            DISABLE_IP_LOGGING: "{{ etherpad_disable_ip_log | string }}"
+            TRUST_PROXY: "{{ etherpad_trust_proxy | string }}"
+            WAIT_FOR_SERVICES: "{{ etherpad_db_ct_name }}:{{ etherpad_db_ct_port }}"
+          ports:
+            - "{{ etherpad_ct_port }}"
+          security_opt:
+            - no-new-privileges:true
+          healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:{{ etherpad_ct_port }}"]
+            interval: 1m30s
+            timeout: 10s
+            retries: 3
+          depends_on:
+            - etherpad_db
+
+- name: Add Etherpad container to www network
+  docker_network:
+    name: "{{ docker_www_net }}"
+    connected:
+      - "{{ etherpad_ct_name }}"
+    appends: yes
+
+- name: Connect to hosts and get an HTTP 200
+  uri:
+    url: "{{ item }}"
+    validate_certs: "{{ le_staging|default(false)|ternary('no', 'yes') }}"
+  with_items:
+    - "https://{{ etherpad_host }}"

@@ -1,5 +1,0 @@
----
-
-dokuwiki_host: hack66.info
-dokuwiki_container_ip: 172.3.26.2
-dokuwiki_container_subnet: 172.3.26.0/30

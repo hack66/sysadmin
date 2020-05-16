@@ -15,6 +15,20 @@
 - https://www.dokuwiki.org/faq:servermove
 - https://www.dokuwiki.org/install:upgrade
 
+### Etherpad
+
+`cd ansible && ansible-playbook deploy-etherpad.yml`
+
+#### Etherpad restore DB
+
+For restoring Etherpad data from a SQL DB dump, you can use docker exec command
+with -i flag:
+
+```
+docker exec -i Container_Name \
+sh -c 'exec mysql -uetherpad_user -D etherpad -p"Password"' < db.sql
+```
+
 ## Adding SSH fingerprints to known hosts
 
 1. Get an SSH fingerprint from a local `known_hosts` file for a given hostname

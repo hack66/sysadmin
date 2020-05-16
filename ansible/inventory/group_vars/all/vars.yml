@@ -3,3 +3,15 @@ ansible_version_min: 2.8
 
 # Lets Encrypt admin email
 le_email: admin@hack66.info
+
+# Dokuwiki website host
+dokuwiki_host: hack66.info
+# Etherpad host
+etherpad_host: pad.hack66.info
+
+# Caddy container hostname
+caddy_ct_name: caddy
+# Etherpad container hostname
+etherpad_ct_name: etherpad
+# Docker network name
+docker_www_net: www_net

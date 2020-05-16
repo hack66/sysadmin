@@ -1,0 +1,12 @@
+---
+
+- import_playbook: ansible-version.yml
+
+- name: "Deploy an Etherpad server"
+  hosts: "{{ target if target is defined else 'etherpad' }}"
+  become: true
+
+  roles:
+    - docker
+    - caddy
+    - etherpad

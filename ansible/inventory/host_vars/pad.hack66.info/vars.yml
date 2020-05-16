@@ -1,3 +1,6 @@
+# The name of the Etherpad instance (default: Etherpad)
+etherpad_title: hack66 Etherpad
+
 # Etherpad DB config
 db_root_password: !vault |
           $ANSIBLE_VAULT;1.1;AES256

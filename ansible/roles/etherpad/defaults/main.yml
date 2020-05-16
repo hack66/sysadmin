@@ -1,0 +1,27 @@
+# Etherpad container name
+etherpad_ct_name: etherpad
+# https://hub.docker.com/r/etherpad/etherpad/tags
+etherpad_ct_img: etherpad/etherpad:1.8.4
+etherpad_ct_link: database
+etherpad_ct_port: 9001
+etherpad_host: "{{ inventory_hostname }}"
+
+# Etherpad DB container name
+etherpad_db_ct_name: etherpad_db
+# https://hub.docker.com/_/mariadb/?tab=tags
+db_ct_img: mariadb:10.5.3-bionic
+etherpad_db_ct_path: "/data/{{ inventory_hostname }}/db"
+etherpad_db_ct_port: 3306
+etherpad_db_ct_type: mysql
+etherpad_db_ct_charset: utf8mb4
+etherpad_db_ct_cmd: --character_set_client=utf8 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --character-set-client-handshake=FALSE
+
+# Etherpad instance options
+# https://github.com/ether/etherpad-lite/blob/develop/doc/docker.md#options-available-by-default
+# The name of the instance (default: Etherpad)
+etherpad_title: Etherpad
+# Disable IP loggind (default: false)
+etherpad_disable_ip_log: true
+# Set to true if you are using a reverse proxy in front of Etherpad
+# (default: false)
+etherpad_trust_proxy: true

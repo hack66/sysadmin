@@ -13,6 +13,9 @@ caddy_docker_certs: /etc/caddycerts
 caddy_plugins:
   - filter
 
+# Caddy container hostname
+caddy_ct_name: caddy
+
 # ipmask enables masking IP addresses to comply with corporate or legal
 # restrictions. The first argument is a mask for IPv4 addresses, and the second
 # argument is a mask for IPv6 addresses. The IPv6 mask is optional; and if only
@@ -26,6 +29,7 @@ le_staging: false
 dokuwiki_root: "/data/{{ dokuwiki_host }}"
 # Dokuwiki Docker webroot PATH (in docker)
 dokuwiki_docker_root: "{{ caddy_docker_volume }}/{{ dokuwiki_host }}"
+dokuwiki_host: "{{ inventory_hostname }}"
 
 # The name used to identify the docker image build
 docker_image_name: "{{ dokuwiki_host }}-image"
@@ -33,3 +37,5 @@ docker_image_name: "{{ dokuwiki_host }}-image"
 caddy_build_image: abiosoft/caddy:builder
 # Alpine image releases: https://hub.docker.com/_/alpine?tab=tags
 stage_docker_image: alpine:3.10
+# Docker www network name
+docker_www_net: www_net

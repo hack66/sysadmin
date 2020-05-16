@@ -1,15 +1,21 @@
-{{ dokuwiki_host }} www.{{ dokuwiki_host }} {
-    root {{ dokuwiki_docker_root }}
+# {{ ansible_managed }}
+
+(default) {
     log / stdout {
         {{ caddy_log_ipmask }}
     }
     gzip
     tls {{ le_email }}
+}
 
-    #fastcgi / /var/run/php-fpm/php-fpm.sock php {
+# Dokuwiki Caddy configuration
+{{ dokuwiki_host }} www.{{ dokuwiki_host }} {
+    import default
+    root {{ dokuwiki_docker_root }}
+
     fastcgi / 127.0.0.1:9000 php {
       index doku.php
-    }
+     }
 
     on startup php-fpm7
 
@@ -37,4 +43,10 @@
       r /(.*)
       to {uri} /doku.php?id={1}&{query}
     }
+}
+
+# Etherpad Caddy configuration
+{{ etherpad_host }} {
+    import default
+    proxy / {{ etherpad_ct_name }}:{{ etherpad_ct_port }}
 }
