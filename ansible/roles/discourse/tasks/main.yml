@@ -1,0 +1,41 @@
+---
+
+- name: Creates Discourse directory {{ dis_path }}
+  file:
+    path: "{{ dis_path }}"
+    state: directory
+
+- name: Clones Discourse git repository
+  git:
+    repo: "{{ dis_git }}"
+    dest: "{{ dis_path }}"
+
+- name: Get Discourse container info
+  docker_container_info:
+    name: app
+  register: discourse_container
+
+- name: Templates Discourse container configuration
+  template:
+    src: standalone.yml.j2
+    dest: "{{ dis_path }}/containers/app.yml"
+  register: dis_template
+
+- name: Print the status of the Discourse container
+  debug:
+    msg: "Container status: {{ discourse_container.container.State.Status }}"
+  when:
+    - discourse_container|bool
+    - discourse_container.exists
+
+- name: (Re)build Discourse container configuration
+  command: "{{ dis_path }}/launcher rebuild app"
+  when: not discourse_container.exists or dis_template.changed
+  no_log: False
+
+- name: Start Discourse container if it's already exist but not running
+  command: "{{ dis_path }}/launcher start app"
+  when:
+    - not dis_template.changed
+    - discourse_container.exists
+    - discourse_container.container.State.Status != 'running'

@@ -50,3 +50,14 @@
     import default
     proxy / {{ etherpad_ct_name }}:{{ etherpad_ct_port }}
 }
+
+# Discourse Caddy configuration
+
+{{ dis_hostname }} {
+    log / stdout {
+        {{ caddy_log_ipmask }}
+    }
+    gzip
+    tls {{ le_email_101cy }}
+    proxy / {{ dis_hostname }}:{{ dis_ports.split(':') | first }}
+}

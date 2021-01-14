@@ -13,5 +13,12 @@ etherpad_host: pad.hack66.info
 caddy_ct_name: caddy
 # Etherpad container hostname
 etherpad_ct_name: etherpad
+# Etherpad container port
+etherpad_ct_port: 9001
 # Docker network name
 docker_www_net: www_net
+# Discourse
+dis_hostname: "{{ inventory_hostname }}"
+# Discourse exposed ports host host:container
+dis_ports: "['998:80']"
+le_email_101cy: admin@101.cy
